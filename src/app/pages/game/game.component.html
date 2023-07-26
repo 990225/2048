@@ -1,0 +1,47 @@
+<div
+  class="fixed top-0 left-0 flex justify-center items-center p-4 w-screen h-screen bg-orange-50"
+>
+  <div class="w-full max-w-lg">
+    <div class="flex justify-between mb-4">
+      <div
+        class="p-4 w-[calc(100%-((100%-1rem)/4)-1rem)] text-center bg-amber-900 bg-opacity-50 rounded-md"
+      >
+        <p
+          class="my-[0.1875rem] text-xs leading-[0.75rem] font-bold text-orange-50 text-opacity-80"
+        >
+          SCORE
+        </p>
+        <p
+          class="overflow-hidden text-ellipsis text-4xl leading-[2.25rem] font-bold text-white"
+        >
+          {{ score }}
+        </p>
+      </div>
+
+      <button
+        class="w-[calc((100%-1rem)/4)] text-lg font-semibold text-white bg-amber-950 bg-opacity-60 rounded-md"
+      >
+        새 게임
+      </button>
+    </div>
+
+    <div
+      class="flex flex-wrap mb-4 p-2 aspect-square bg-amber-900 bg-opacity-50 rounded-md"
+    >
+      <div class="w-1/4 h-1/4 p-2" *ngFor="let value of tiles">
+        <div
+          class="flex justify-center items-center w-full h-full font-bold rounded-md"
+          [ngClass]="value ? 'tile-' + value : 'bg-white bg-opacity-20'"
+        >
+          {{ value }}
+        </div>
+      </div>
+    </div>
+
+    <p class="text-lg font-medium text-zinc-700 break-keep">
+      방향키를 이용하여 모든 타일을 한 방향으로 움직일 수 있습니다. 같은 숫자의
+      타일이 만나면 타일이 합쳐집니다. 타일의 값이 2048이 되거나, 더 이상 합쳐질
+      수 있는 타일이 없을 경우 게임이 종료됩니다.
+    </p>
+  </div>
+</div>

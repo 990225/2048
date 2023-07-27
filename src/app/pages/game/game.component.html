@@ -19,7 +19,8 @@
       </div>
 
       <button
-        class="w-[calc((100%-1rem)/4)] text-lg font-semibold text-white bg-amber-950 bg-opacity-60 rounded-md"
+        class="w-[calc((100%-1rem)/4)] text-lg font-semibold text-white bg-amber-950 bg-opacity-60 rounded-md outline-none"
+        (click)="newGame()"
       >
         새 게임
       </button>
@@ -27,6 +28,7 @@
 
     <div
       class="flex flex-wrap mb-4 p-2 aspect-square bg-amber-900 bg-opacity-50 rounded-md"
+      (keydown)="moveTiles($event)"
     >
       <div class="w-1/4 h-1/4 p-2" *ngFor="let value of tiles">
         <div

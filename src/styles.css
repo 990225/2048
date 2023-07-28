@@ -6,37 +6,37 @@ html {
   font-size: 16px;
 }
 
-@media (max-width: 506px) {
+@media (max-width: 508px) {
   html {
     font-size: 15px;
   }
 }
 
-@media (max-width: 475px) {
+@media (max-width: 477px) {
   html {
     font-size: 14px;
   }
 }
 
-@media (max-width: 445px) {
+@media (max-width: 447px) {
   html {
     font-size: 13px;
   }
 }
 
-@media (max-width: 414px) {
+@media (max-width: 416px) {
   html {
     font-size: 12px;
   }
 }
 
-@media (max-width: 383px) {
+@media (max-width: 385px) {
   html {
     font-size: 11px;
   }
 }
 
-@media (max-width: 352px) {
+@media (max-width: 354px) {
   html {
     font-size: 10px;
   }

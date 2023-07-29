@@ -27,9 +27,22 @@
     </div>
 
     <div
-      class="flex flex-wrap mb-4 p-2 aspect-square bg-amber-900 bg-opacity-50 rounded-md"
+      class="relative flex flex-wrap mb-4 p-2 aspect-square bg-amber-900 bg-opacity-50 rounded-md select-none"
       (keydown)="moveTiles($event)"
     >
+      <div
+        *ngIf="isGameOver || isGameWon"
+        class="absolute top-0 left-0 flex justify-center items-center w-full h-full bg-opacity-40 rounded-md"
+        [ngClass]="isGameOver ? 'bg-orange-50' : 'bg-yellow-300'"
+      >
+        <p
+          class="text-6xl font-bold"
+          [ngClass]="isGameOver ? 'text-[#776E65]' : 'text-white'"
+        >
+          {{ isGameOver ? "Game over" : "You Win" }}!
+        </p>
+      </div>
+
       <div class="w-1/4 h-1/4 p-2" *ngFor="let value of tiles">
         <div
           class="flex justify-center items-center w-full h-full font-bold rounded-md"

@@ -9,6 +9,9 @@ export class GameComponent {
   score = 0;
   tiles: Array<number | null> = new Array(16).fill(null);
 
+  isGameOver = false;
+  isGameWon = false;
+
   constructor() {
     this.newGame();
   }
@@ -17,6 +20,9 @@ export class GameComponent {
   newGame() {
     this.score = 0;
     this.tiles = new Array(16).fill(null);
+
+    this.isGameOver = false;
+    this.isGameWon = false;
 
     const newTiles = [this.getRandomNumber(15), this.getRandomNumber(15)];
     while (newTiles[0] === newTiles[1]) {
@@ -41,29 +47,39 @@ export class GameComponent {
   // 타일 이동
   @HostListener('window:keydown', ['$event'])
   moveTiles({ key }: KeyboardEvent) {
-    switch (key) {
-      case 'ArrowUp':
-        if (this.moveTilesUp()) {
-          this.createTile();
-        }
-        break;
-      case 'ArrowDown':
-        if (this.moveTilesDown()) {
-          this.createTile();
-        }
-        break;
-      case 'ArrowLeft':
-        if (this.moveTilesLeft()) {
-          this.createTile();
-        }
-        break;
-      case 'ArrowRight':
-        if (this.moveTilesRight()) {
-          this.createTile();
-        }
-        break;
-      default:
-        break;
+    if (!this.isGameOver && !this.isGameWon) {
+      switch (key) {
+        case 'ArrowUp':
+          if (this.moveTilesUp()) {
+            this.createTile();
+          } else {
+            this.checkGameOver();
+          }
+          break;
+        case 'ArrowDown':
+          if (this.moveTilesDown()) {
+            this.createTile();
+          } else {
+            this.checkGameOver();
+          }
+          break;
+        case 'ArrowLeft':
+          if (this.moveTilesLeft()) {
+            this.createTile();
+          } else {
+            this.checkGameOver();
+          }
+          break;
+        case 'ArrowRight':
+          if (this.moveTilesRight()) {
+            this.createTile();
+          } else {
+            this.checkGameOver();
+          }
+          break;
+        default:
+          break;
+      }
     }
   }
 
@@ -87,6 +103,10 @@ export class GameComponent {
             this.score += this.tiles[j]!;
             mergedTileIndices.push(j);
             moveCount++;
+            // 두 타일의 합이 2048이 됐을 경우 게임 승리
+            if (this.tiles[j] === 2048) {
+              this.isGameWon = true;
+            }
             break;
           } else {
             break;
@@ -117,6 +137,10 @@ export class GameComponent {
             this.score += this.tiles[j]!;
             mergedTileIndices.push(j);
             moveCount++;
+            // 두 타일의 합이 2048이 됐을 경우 게임 승리
+            if (this.tiles[j] === 2048) {
+              this.isGameWon = true;
+            }
             break;
           } else {
             break;
@@ -148,6 +172,10 @@ export class GameComponent {
               this.score += this.tiles[j]!;
               mergedTileIndices.push(j);
               moveCount++;
+              // 두 타일의 합이 2048이 됐을 경우 게임 승리
+              if (this.tiles[j] === 2048) {
+                this.isGameWon = true;
+              }
               break;
             } else {
               break;
@@ -180,6 +208,10 @@ export class GameComponent {
               this.score += this.tiles[j]!;
               mergedTileIndices.push(j);
               moveCount++;
+              // 두 타일의 합이 2048이 됐을 경우 게임 승리
+              if (this.tiles[j] === 2048) {
+                this.isGameWon = true;
+              }
               break;
             } else {
               break;
@@ -189,6 +221,87 @@ export class GameComponent {
       }
     }
     return !!moveCount;
+  }
+
+  // 더 이상 합칠 수 있는 타일이 없을 경우 게임 오버
+  checkGameOver() {
+    if (
+      this.tiles.filter(Boolean).length === 16 &&
+      !this.canMoveTilesUp() &&
+      !this.canMoveTilesDown() &&
+      !this.canMoveTilesLeft() &&
+      !this.canMoveTilesRight()
+    ) {
+      this.isGameOver = true;
+    }
+  }
+
+  // 위쪽으로 합칠 수 있는 타일이 있는지 확인
+  canMoveTilesUp() {
+    for (let i = 4; i < 16; i++) {
+      if (this.tiles[i]) {
+        for (let j = i - 4; 0 <= j; j -= 4) {
+          if (!this.tiles[j] || this.tiles[j] === this.tiles[j + 4]) {
+            return true;
+          } else {
+            break;
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+  // 아래쪽으로 합칠 수 있는 타일이 있는지 확인
+  canMoveTilesDown() {
+    for (let i = 11; 0 <= i; i--) {
+      if (this.tiles[i]) {
+        for (let j = i + 4; j <= 15; j += 4) {
+          if (!this.tiles[j] || this.tiles[j] === this.tiles[j - 4]) {
+            return true;
+          } else {
+            break;
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+  // 왼쪽으로 합칠 수 있는 타일이 있는지 확인
+  canMoveTilesLeft() {
+    for (let i = 1; i < 16; i++) {
+      if (i % 4) {
+        if (this.tiles[i]) {
+          for (let j = i - 1; i - (i % 4) <= j; j--) {
+            if (!this.tiles[j] || this.tiles[j] === this.tiles[j + 1]) {
+              return true;
+            } else {
+              break;
+            }
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+  // 오른쪽으로 합칠 수 있는 타일이 있는지 확인
+  canMoveTilesRight() {
+    for (let i = 15; 0 <= i; i--) {
+      if ((i + 1) % 4) {
+        if (this.tiles[i]) {
+          for (let j = i + 1; j % 4; j++) {
+            if (!this.tiles[j] || this.tiles[j] === this.tiles[j - 1]) {
+              return true;
+            } else {
+              break;
+            }
+          }
+        }
+      }
+    }
+    return false;
   }
 
   // 0 ~ max 랜덤한 숫자 리턴

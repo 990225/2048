@@ -4,7 +4,7 @@
   <div class="w-full max-w-lg">
     <div class="flex justify-between mb-4">
       <div
-        class="p-4 w-[calc(100%-((100%-1rem)/4)-1rem)] text-center bg-amber-900 bg-opacity-50 rounded-md"
+        class="relative p-4 w-[calc(100%-((100%-1rem)/4)-1rem)] text-center bg-amber-900 bg-opacity-50 rounded-md"
       >
         <p
           class="my-[0.1875rem] text-xs leading-[0.75rem] font-bold text-orange-50 text-opacity-80"
@@ -15,6 +15,14 @@
           class="overflow-hidden text-ellipsis text-4xl leading-[2.25rem] font-bold text-white"
         >
           {{ score }}
+        </p>
+        <p
+          *ngFor="let changeScore of scoreIncrements"
+          class="absolute top-1/2 left-1/2 text-2xl font-bold text-[#776E65]"
+          [@scoreChangeAnimation]="'scoreAnimation'"
+          (@scoreChangeAnimation.done)="onScoreChangeAnimationDone($event)"
+        >
+          +{{ changeScore }}
         </p>
       </div>
 

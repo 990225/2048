@@ -1,13 +1,47 @@
+import {
+  trigger,
+  state,
+  style,
+  transition,
+  animate,
+  keyframes,
+  AnimationEvent,
+} from '@angular/animations';
 import { Component, HostListener } from '@angular/core';
 
 @Component({
   selector: 'app-game',
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.css'],
+  animations: [
+    trigger('scoreChangeAnimation', [
+      state(
+        'scoreAnimation',
+        style({
+          opacity: 0,
+          transform: 'translate(-50%, calc(-50% - 2.8125rem))',
+        })
+      ),
+      transition(':enter', [
+        animate(
+          '500ms ease-out',
+          keyframes([
+            style({ opacity: 1, transform: 'translate(-50%, -50%)' }),
+            style({
+              opacity: 0,
+              transform: 'translate(-50%, calc(-50% - 2.8125rem))',
+            }),
+          ])
+        ),
+      ]),
+    ]),
+  ],
 })
 export class GameComponent {
   score = 0;
   tiles: Array<number | null> = new Array(16).fill(null);
+
+  scoreIncrements: Array<number> = [];
 
   isGameOver = false;
   isGameWon = false;
@@ -85,6 +119,7 @@ export class GameComponent {
 
   // 위쪽으로 타일 이동
   moveTilesUp() {
+    const prevScore = this.score;
     const mergedTileIndices: Array<number> = [];
     let moveCount = 0;
     for (let i = 4; i < 16; i++) {
@@ -114,11 +149,13 @@ export class GameComponent {
         }
       }
     }
+    this.pushScoreChange(this.score - prevScore);
     return !!moveCount;
   }
 
   // 아래쪽으로 타일 이동
   moveTilesDown() {
+    const prevScore = this.score;
     const mergedTileIndices: Array<number> = [];
     let moveCount = 0;
     for (let i = 11; 0 <= i; i--) {
@@ -148,11 +185,13 @@ export class GameComponent {
         }
       }
     }
+    this.pushScoreChange(this.score - prevScore);
     return !!moveCount;
   }
 
   // 왼쪽으로 타일 이동
   moveTilesLeft() {
+    const prevScore = this.score;
     const mergedTileIndices: Array<number> = [];
     let moveCount = 0;
     for (let i = 1; i < 16; i++) {
@@ -184,11 +223,13 @@ export class GameComponent {
         }
       }
     }
+    this.pushScoreChange(this.score - prevScore);
     return !!moveCount;
   }
 
   // 오른쪽으로 타일 이동
   moveTilesRight() {
+    const prevScore = this.score;
     const mergedTileIndices: Array<number> = [];
     let moveCount = 0;
     for (let i = 15; 0 <= i; i--) {
@@ -220,7 +261,22 @@ export class GameComponent {
         }
       }
     }
+    this.pushScoreChange(this.score - prevScore);
     return !!moveCount;
+  }
+
+  // 증가된 점수 추가
+  pushScoreChange(score: number) {
+    if (score > 0) {
+      this.scoreIncrements.push(score);
+    }
+  }
+
+  // 점수 증가 애니메이션 종료 시 증가된 점수 값 제거
+  onScoreChangeAnimationDone({ toState }: AnimationEvent) {
+    if (toState === 'scoreAnimation') {
+      this.scoreIncrements.shift();
+    }
   }
 
   // 더 이상 합칠 수 있는 타일이 없을 경우 게임 오버

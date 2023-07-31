@@ -2,9 +2,9 @@
   class="fixed top-0 left-0 flex justify-center items-center p-4 w-screen h-screen bg-orange-50"
 >
   <div class="w-full max-w-lg">
-    <div class="flex justify-between mb-4">
+    <div class="flex mb-4">
       <div
-        class="relative p-4 w-[calc(100%-((100%-1rem)/4)-1rem)] text-center bg-amber-900 bg-opacity-50 rounded-md"
+        class="relative mr-4 p-4 w-[calc((100%-(100%-1rem)/4)/2-1rem)] text-center bg-amber-900 bg-opacity-50 rounded-md"
       >
         <p
           class="my-[0.1875rem] text-xs leading-[0.75rem] font-bold text-orange-50 text-opacity-80"
@@ -23,6 +23,21 @@
           (@scoreChangeAnimation.done)="onScoreChangeAnimationDone($event)"
         >
           +{{ changeScore }}
+        </p>
+      </div>
+
+      <div
+        class="mr-4 p-4 w-[calc((100%-(100%-1rem)/4)/2-1rem)] text-center bg-amber-900 bg-opacity-50 rounded-md"
+      >
+        <p
+          class="my-[0.1875rem] text-xs leading-[0.75rem] font-bold text-orange-50 text-opacity-80"
+        >
+          BEST
+        </p>
+        <p
+          class="overflow-hidden text-ellipsis text-4xl leading-[2.25rem] font-bold text-white"
+        >
+          {{ bestScore }}
         </p>
       </div>
 

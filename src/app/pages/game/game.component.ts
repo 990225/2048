@@ -39,6 +39,7 @@ import { Component, HostListener } from '@angular/core';
 })
 export class GameComponent {
   score = 0;
+  bestScore = 0;
   tiles: Array<number | null> = new Array(16).fill(null);
 
   scoreIncrements: Array<number> = [];
@@ -53,6 +54,7 @@ export class GameComponent {
   // 새 게임
   newGame() {
     this.score = 0;
+    this.bestScore = Number(localStorage.getItem('bestScore')) || 0;
     this.tiles = new Array(16).fill(null);
 
     this.isGameOver = false;
@@ -135,7 +137,7 @@ export class GameComponent {
           ) {
             this.tiles[j]! *= 2;
             this.tiles[j + 4] = null;
-            this.score += this.tiles[j]!;
+            this.incrementScore(this.tiles[j]!);
             mergedTileIndices.push(j);
             moveCount++;
             // 두 타일의 합이 2048이 됐을 경우 게임 승리
@@ -171,7 +173,7 @@ export class GameComponent {
           ) {
             this.tiles[j]! *= 2;
             this.tiles[j - 4] = null;
-            this.score += this.tiles[j]!;
+            this.incrementScore(this.tiles[j]!);
             mergedTileIndices.push(j);
             moveCount++;
             // 두 타일의 합이 2048이 됐을 경우 게임 승리
@@ -208,7 +210,7 @@ export class GameComponent {
             ) {
               this.tiles[j]! *= 2;
               this.tiles[j + 1] = null;
-              this.score += this.tiles[j]!;
+              this.incrementScore(this.tiles[j]!);
               mergedTileIndices.push(j);
               moveCount++;
               // 두 타일의 합이 2048이 됐을 경우 게임 승리
@@ -246,7 +248,7 @@ export class GameComponent {
             ) {
               this.tiles[j]! *= 2;
               this.tiles[j - 1] = null;
-              this.score += this.tiles[j]!;
+              this.incrementScore(this.tiles[j]!);
               mergedTileIndices.push(j);
               moveCount++;
               // 두 타일의 합이 2048이 됐을 경우 게임 승리
@@ -263,6 +265,15 @@ export class GameComponent {
     }
     this.pushScoreChange(this.score - prevScore);
     return !!moveCount;
+  }
+
+  // 점수 증가
+  incrementScore(tileValue: number) {
+    this.score += tileValue;
+    if (this.score > this.bestScore) {
+      this.bestScore = this.score;
+      localStorage.setItem('bestScore', String(this.bestScore));
+    }
   }
 
   // 증가된 점수 추가
